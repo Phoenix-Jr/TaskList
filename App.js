@@ -1,11 +1,15 @@
-import { Text, View, StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import TaskScreen from "./src/Screens/Tasks";
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <TaskScreen />
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.container}>
+        <TaskScreen />
+      </SafeAreaView>
+    </Provider>
   );
 }
 

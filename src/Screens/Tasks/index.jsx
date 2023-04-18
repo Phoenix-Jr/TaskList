@@ -5,10 +5,14 @@ import TaskTile from "./TaskTile";
 import TaskForm from "./TaskForm";
 import FloatingBtn from "../../components/FloatingBtn";
 import Counter from "../../components/Counter";
+import { useSelector } from "react-redux";
+import { getTasks } from "../../redux/selector";
+import { delete_task, toogle_task } from "../../redux/actions";
+import { useDispatch } from "react-redux";
 
 export default function TaskScreen() {
-  const [tasks, setTasks] = useState([]);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const dispatch = useDispatch();
   const renderItem = ({ item }) => {
     return (
       <TaskTile
@@ -18,20 +22,14 @@ export default function TaskScreen() {
       />
     );
   };
-  const onAddTask = (title) => {
-    setTasks([...tasks, { id: Date.now(), title, isCompleted: false }]);
-  };
+
+  const tasks = useSelector(getTasks);
 
   const onUpdateTask = (id) => {
-    const filtered = tasks.map((task) => {
-      if (task.id === id) task.isCompleted = !task.isCompleted;
-      return task;
-    });
-    setTasks(filtered);
+    dispatch(toogle_task(id));
   };
   const onDeleteTask = (id) => {
-    const filtered = tasks.filter((task) => task.id !== id);
-    setTasks(filtered);
+    dispatch(delete_task(id));
   };
   const _toggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -42,7 +40,7 @@ export default function TaskScreen() {
         ListHeaderComponent={
           <>
             <Header />
-            {isFormVisible && <TaskForm onAddTask={onAddTask} />}
+            {isFormVisible && <TaskForm />}
             <View style={styles.container}>
               <Counter nb={tasks.length} title={"Tâches crées"} />
               <Counter
